@@ -19,6 +19,7 @@
     --text-color: #e4e6eb;
     --board-bg: #242526;
     --light-off: #3a3b3c;
+    /* In dark mode, we'll let JS override this, but standard is yellow */
     --light-on: #ffeb3b;
     --light-on-glow: rgba(255, 235, 59, 0.4);
     --btn-bg: #3a3b3c;
@@ -60,7 +61,7 @@ body {
 }
 
 header {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 h1 {
@@ -81,10 +82,53 @@ h1 {
     font-weight: 600;
 }
 
+.match-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--board-bg);
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+}
+
+.time-display {
+    color: #e53935;
+    font-family: monospace;
+    font-size: 1.4rem;
+    margin-left: 5px;
+}
+
+[data-theme="dark"] .time-display {
+    color: #ff5252;
+}
+
+.scores {
+    display: flex;
+    gap: 15px;
+}
+
+.player-box {
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+.player-box.active-player {
+    opacity: 1;
+    background-color: var(--primary-btn);
+    color: var(--primary-btn-text);
+}
+
 .stats {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: 10px;
+    opacity: 0.8;
 }
 
 .board {
@@ -110,6 +154,9 @@ h1 {
     box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .light.on {
@@ -127,23 +174,34 @@ h1 {
     box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1), 0 0 5px var(--light-on-glow) !important;
 }
 
+/* Lightbulb Logo inside ON buttons */
+.light.on::after {
+    content: "💡";
+    font-size: 1.5rem;
+    animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
 .hidden {
     display: none !important;
 }
 
-#win-message {
+#win-message, #turn-overlay {
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    color: #4caf50;
-    margin: 20px 0;
     padding: 20px;
     background-color: var(--board-bg);
     border-radius: 12px;
+    margin: 20px 0;
     transition: background-color 0.3s ease;
 }
 
-#win-message h2 {
+#win-message h2, #turn-overlay h2 {
     font-size: 2rem;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.mt-main {
+    margin-top: 15px;
 }
 
 .btn {
@@ -188,7 +246,7 @@ select {
 }
 
 @keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
+    0% { transform: scale(0.5); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
@@ -196,6 +254,9 @@ select {
     .light {
         width: 40px;
         height: 40px;
+    }
+    .light.on::after {
+        font-size: 1.2rem;
     }
     .game-container {
         padding: 20px 15px;
